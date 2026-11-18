@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0a0e1a">
+
+<title>dev.bots — Telegram-боты под ключ · Портфолио разработчика</title>
+<meta name="description" content="Разработка Telegram-ботов на Python и aiogram 3: ИИ-консультанты, приём заявок, платные каналы на Telegram Stars, генерация 3D по фото. 4 demo-проекта — смотрите портфолио.">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="dev.bots — Telegram-боты, которые работают на ваш бизнес">
+<meta property="og:description" content="ИИ-консультанты, приём заявок, платные каналы, генерация 3D. 4 живых demo-проекта на Python + aiogram 3.">
+
+<meta property="og:url" content="https://daardos.github.io/TG-Bot_Portfolio/">
+<meta property="og:image" content="https://daardos.github.io/TG-Bot_Portfolio/og-cover.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- Favicon: emoji через data-URI SVG -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%F0%9F%A4%96%3C/text%3E%3C/svg%3E">
+
+<!-- Шрифты: Manrope (кириллица) + Inter -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+
+<style>
+/* ═══ Токены и сброс ═══ */
+:root{
+  --bg:#0a0e1a; --bg-card:#121829; --bg-card-2:#1a2035;
+  --text:#e6ecff; --text-dim:#8a95b3;
+  --accent-1:#5eead4; --accent-2:#818cf8; --accent-3:#f472b6;
+  --border:#1f2740;
+  --grad:linear-gradient(135deg,var(--accent-1),var(--accent-2));
+  --radius:18px;
+  --shadow:0 10px 30px rgba(0,0,0,.35);
+  --shadow-lift:0 16px 44px rgba(0,0,0,.5);
+  --font-head:"Manrope",system-ui,sans-serif;
+  --font-body:"Inter",system-ui,sans-serif;
+  --font-mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:88px;scrollbar-gutter:stable;scrollbar-color:#2a3352 var(--bg)}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:1rem;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-wrap:break-word}
+body.lock{overflow:hidden}
+h1,h2,h3,h4{font-family:var(--font-head);font-weight:700;line-height:1.2;letter-spacing:-.01em}
+h1{font-size:clamp(2.2rem,5vw,4rem);font-weight:800;letter-spacing:-.02em;line-height:1.12;text-wrap:balance}
+h2{font-size:clamp(1.7rem,3.5vw,2.6rem)}
+ul,ol{list-style:none}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+svg{display:block}
+strong{font-weight:600;color:var(--text)}
+::selection{background:var(--accent-1);color:#0a0e1a}
+:focus-visible{outline:2px solid var(--accent-1);outline-offset:2px}
+:focus:not(:focus-visible){outline:none}
+.ic{width:18px;height:18px;flex:none}
+.wrap{width:100%;max-width:82.5rem;margin-inline:auto;padding-inline:clamp(16px,4vw,32px)}
+.section{padding-block:clamp(44px,6vw,76px)}
+.sec-head{margin-bottom:clamp(28px,4vw,44px)}
+.sec-kicker,.kicker{font-family:var(--font-mono);font-size:.8rem;letter-spacing:.08em;color:var(--accent-1);margin-bottom:10px}
+.sec-sub{color:var(--text-dim);max-width:640px;margin-top:10px;font-size:1.02rem}
+/* Плейсхолдеры — заметно, но аккуратно */
+.TODO{border-bottom:1px dashed var(--accent-3);padding-bottom:1px}
+
+/* Skip-link */
+.skip-link{position:absolute;left:16px;top:-64px;z-index:300;background:var(--accent-1);color:#0a0e1a;font-weight:600;padding:10px 16px;border-radius:10px;transition:top .2s ease}
+.skip-link:focus{top:12px}
+
+/* ═══ Кнопки / чипы / бейджи ═══ */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:11px 20px;border-radius:12px;border:1px solid transparent;font-weight:600;font-size:.95rem;line-height:1.2;white-space:nowrap;transition:background .2s ease,color .2s ease,border-color .2s ease,transform .2s ease,box-shadow .2s ease}
+.btn .ic{width:17px;height:17px}
+.btn-primary{background:var(--grad);color:#0a0e1a;box-shadow:0 6px 20px rgba(94,234,212,.18)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(94,234,212,.3)}
+.btn-primary:active{transform:translateY(0)}
+.btn-secondary{background:var(--bg-card);border-color:var(--border);color:var(--text)}
+.btn-secondary:hover{background:var(--bg-card-2);border-color:#2c3654;transform:translateY(-2px)}
+.btn-lg{min-height:52px;padding:14px 26px;font-size:1rem;border-radius:13px}
+.btn-sm{padding:10px 12px;font-size:.87rem;border-radius:10px}
+.glow{box-shadow:0 0 26px rgba(94,234,212,.35),0 10px 30px rgba(0,0,0,.35)}
+.glow:hover{box-shadow:0 0 38px rgba(94,234,212,.5),0 14px 34px rgba(0,0,0,.4)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.74rem;font-weight:500;color:var(--text-dim);background:rgba(255,255,255,.04);border:1px solid var(--border);padding:4px 10px;border-radius:999px;white-space:nowrap}
+.badge{display:inline-flex;align-items:center;font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:5px 10px;border-radius:999px;border:1px solid;white-space:nowrap}
+.tone-mint{color:var(--accent-1);background:rgba(94,234,212,.1);border-color:rgba(94,234,212,.35)}
+.tone-indigo{color:var(--accent-2);background:rgba(129,140,248,.12);border-color:rgba(129,140,248,.4)}
+.tone-pink{color:var(--accent-3);background:rgba(244,114,182,.1);border-color:rgba(244,114,182,.35)}
+
+/* ═══ [A] Шапка ═══ */
+.site-header{position:sticky;top:0;z-index:100;background:rgba(10,14,26,.85);-webkit-backdrop-filter:blur(12px) saturate(140%);backdrop-filter:blur(12px) saturate(140%);border-bottom:1px solid transparent;transition:border-color .2s ease,box-shadow .2s ease}
+.site-header.scrolled{border-color:var(--border);box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.header-inner{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:72px}
+.logo{display:flex;align-items:center;gap:10px;min-height:44px}
+.logo-mark{display:grid;place-items:center;width:38px;height:38px;border-radius:11px;background:var(--grad);color:#0a0e1a;box-shadow:0 0 18px rgba(94,234,212,.25);flex:none}
+.logo-mark .ic{width:18px;height:18px}
+.logo-text{display:flex;flex-direction:column;line-height:1.15}
+.logo-name{font-family:var(--font-head);font-weight:800;font-size:1.12rem;letter-spacing:-.01em}
+.logo-name .accent{color:var(--accent-1)}
+.caret{display:inline-block;width:.45em;height:.85em;background:var(--accent-1);margin-left:3px;border-radius:1px;vertical-align:-.08em;animation:blink 1.2s steps(2,start) infinite}
+@keyframes blink{50%{opacity:0}}
+.logo-sub{font-size:.68rem;color:var(--text-dim);letter-spacing:.02em}
+.site-nav{position:absolute;top:100%;left:0;right:0;display:flex;flex-direction:column;gap:4px;padding:12px 16px 18px;background:rgba(13,18,34,.97);border-bottom:1px solid var(--border);box-shadow:0 24px 40px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .2s ease,transform .2s ease,visibility .2s}
+.site-nav.open{opacity:1;visibility:visible;transform:none}
+.site-nav>a:not(.btn){padding:13px 12px;border-radius:10px;color:var(--text-dim);font-weight:500;font-size:.98rem;transition:color .2s ease,background .2s ease}
+.site-nav>a:not(.btn):hover{color:var(--text);background:var(--bg-card-2)}
+.nav-cta{margin-top:6px}
+.header-actions{display:flex;align-items:center;gap:10px}
+.header-cta{display:none}
+.burger{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;width:44px;height:44px;border:1px solid var(--border);border-radius:10px;background:var(--bg-card);transition:background .2s ease,border-color .2s ease}
+.burger:hover{background:var(--bg-card-2)}
+.burger span{display:block;width:20px;height:2px;border-radius:2px;background:var(--text);transition:transform .2s ease,opacity .2s ease}
+.burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.burger.open span:nth-child(2){opacity:0}
+.burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+@media (min-width:900px){
+  .site-nav{position:static;flex-direction:row;align-items:center;margin-left:auto;padding:0;background:none;border:0;box-shadow:none;opacity:1;visibility:visible;transform:none}
+  .site-nav>a:not(.btn){padding:9px 12px;font-size:.95rem}
+  .site-nav>a:not(.btn):hover{background:rgba(255,255,255,.04)}
+  .nav-cta{display:none}
+  .header-cta{display:inline-flex;padding:10px 16px;font-size:.9rem}
+  .burger{display:none}
+}
+
+/* ═══ [B] Hero ═══ */
+.hero{padding-top:clamp(40px,6vw,72px);padding-bottom:clamp(48px,7vw,88px)}
+.hero-grid{display:grid;gap:44px;align-items:center}
+.hero-sub{color:var(--text-dim);font-size:1.05rem;max-width:560px;margin-top:18px}
+.hl{color:var(--accent-1);background-image:var(--grad);background-repeat:no-repeat;background-size:100% .12em;background-position:0 97%;-webkit-box-decoration-break:clone;box-decoration-break:clone;padding-bottom:.05em}
+.hero-actions{display:flex;flex-direction:column;gap:12px;margin-top:28px}
+.hero-actions .btn{width:100%}
+.hero-badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+.hero-badges li{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border:1px solid var(--border);border-radius:999px;background:var(--bg-card);font-size:.82rem;font-weight:500;color:var(--text-dim)}
+.hero-badges .ic{width:15px;height:15px;color:var(--accent-1)}
+.hero-art{position:relative;width:100%;max-width:480px;margin-inline:auto}
+.hero-art::before{content:"";position:absolute;inset:8% 4%;background:radial-gradient(closest-side,rgba(94,234,212,.13),rgba(129,140,248,.07) 60%,transparent 80%)}
+.hero-art svg{position:relative;width:100%;height:auto}
+.hg-mono{font-family:var(--font-mono)}
+.hg-float-a{animation:hg-bob 7s ease-in-out infinite}
+.hg-float-b{animation:hg-bob 6s ease-in-out -1.5s infinite}
+.hg-float-c{animation:hg-bob 8s ease-in-out -3s infinite}
+.hg-plane{animation:hg-bob 5s ease-in-out infinite;filter:drop-shadow(0 8px 22px rgba(94,234,212,.35))}
+@keyframes hg-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.hg-dash{animation:hg-dashmove 16s linear infinite}
+@keyframes hg-dashmove{to{stroke-dashoffset:-240}}
+.hg-spark{transform-box:fill-box;transform-origin:center;animation:hg-twinkle 3.6s ease-in-out infinite}
+.hg-spark-2{animation-delay:-1.2s}
+.hg-spark-3{animation-delay:-2.4s}
+@keyframes hg-twinkle{0%,100%{opacity:.35;transform:scale(.75)}50%{opacity:1;transform:scale(1.05)}}
+.hg-pulse{animation:hg-pulse 2.4s ease-in-out infinite}
+@keyframes hg-pulse{50%{opacity:.35}}
+@media (min-width:560px){
+  .hero-actions{flex-direction:row}
+  .hero-actions .btn{width:auto}
+}
+@media (min-width:1280px){
+  .hero-grid{grid-template-columns:minmax(0,1.9fr) minmax(0,1fr);gap:48px}
+  .hero-art{max-width:520px}
+}
+
+/* ═══ [C] Проекты ═══ */
+.cards-grid{display:grid;grid-template-columns:1fr;gap:20px}
+.card{display:flex;flex-direction:column;height:100%;min-width:0;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:22px 20px;box-shadow:var(--shadow);transition:background .2s ease,transform .2s ease,box-shadow .2s ease,border-color .2s ease}
+.card:hover{background:var(--bg-card-2);transform:translateY(-4px);box-shadow:var(--shadow-lift);border-color:#2c3654}
+.card:focus-within{border-color:rgba(94,234,212,.45)}
+.card-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.card-emoji{display:grid;place-items:center;width:52px;height:52px;border-radius:50%;font-size:26px;border:1px solid;flex:none}
+.card-title{font-size:1.12rem;line-height:1.35;margin:16px 0 8px;min-height:2.7em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card-desc{color:var(--text-dim);font-size:.92rem;line-height:1.55;margin-bottom:14px;min-height:3.1em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card-features{flex:1;display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.card-features li{display:flex;gap:8px;font-size:.88rem;line-height:1.45}
+.card-features .ic{width:15px;height:15px;color:var(--accent-1);margin-top:3px}
+.card-stack{margin-bottom:18px}
+.card-actions{display:flex;gap:10px}
+.card-actions .btn{flex:1;min-width:0}
+html:not(.js) [data-project]{display:none}
+.demo-note{display:flex;gap:12px;align-items:flex-start;margin-top:22px;padding:16px 20px;background:var(--bg-card);border:1px dashed #2c3654;border-radius:14px;color:var(--text-dim);font-size:.92rem}
+.demo-note .ic{color:var(--accent-2);margin-top:3px}
+@media (min-width:720px){.cards-grid{grid-template-columns:repeat(2,1fr)}}
+@media (min-width:1240px){.cards-grid{grid-template-columns:repeat(4,1fr)}}
+
+/* ═══ [D] Модалка ═══ */
+.modal{position:fixed;inset:0;z-index:200;display:flex;align-items:flex-end;justify-content:center}
+.modal[hidden]{display:none}
+.modal-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.7);opacity:0;transition:opacity .25s ease}
+.modal-panel{position:relative;z-index:1;display:flex;flex-direction:column;width:100%;height:100vh;height:100dvh;background:var(--bg-card);border:1px solid var(--border);opacity:0;transform:translateY(28px);transition:opacity .25s ease,transform .25s ease;overflow:hidden}
+.modal.open .modal-backdrop{opacity:1}
+.modal.open .modal-panel{opacity:1;transform:none}
+.modal-close{position:absolute;top:14px;right:14px;z-index:2;display:grid;place-items:center;width:44px;height:44px;background:rgba(10,14,26,.6);border:1px solid var(--border);border-radius:12px;color:var(--text-dim);transition:color .2s ease,background .2s ease,border-color .2s ease}
+.modal-close:hover{color:var(--text);background:var(--bg-card-2);border-color:#2c3654}
+.modal-scroll{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:24px 20px 28px}
+.modal-head{display:flex;gap:14px;align-items:center;margin-bottom:18px;padding-right:52px}
+.modal-head .card-emoji{width:54px;height:54px;font-size:27px}
+.modal-head .badge{margin-bottom:8px}
+.modal-head h3{font-size:clamp(1.25rem,2.6vw,1.6rem);line-height:1.25}
+.modal-lead{color:var(--text-dim);font-size:.98rem}
+.modal-h{display:flex;align-items:center;gap:8px;font-size:1.02rem;color:var(--accent-1);margin:24px 0 12px}
+.modal-h::before{content:"//";font-family:var(--font-mono);font-size:.85em;color:var(--accent-2)}
+.modal-features li{display:flex;gap:10px;margin-bottom:10px;font-size:.95rem;line-height:1.55}
+.modal-features .ic{width:16px;height:16px;color:var(--accent-1);margin-top:4px}
+.modal-p{color:var(--text-dim);font-size:.95rem;margin-bottom:12px}
+.modal-foot{padding:14px 20px calc(14px + env(safe-area-inset-bottom));border-top:1px solid var(--border)}
+.modal-foot .btn{width:100%}
+@media (min-width:720px){
+  .modal{align-items:center;padding:24px}
+  .modal-panel{width:min(720px,100%);height:auto;max-height:min(88vh,880px);border-radius:20px;transform:scale(.96);box-shadow:var(--shadow-lift)}
+  .modal.open .modal-panel{transform:scale(1)}
+  .modal-scroll{padding:32px}
+  .modal-foot{padding:16px 32px}
+}
+
+/* ═══ [E] Стек ═══ */
+.stack-cloud{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:900px;margin-inline:auto}
+.stack-pill{display:inline-flex;align-items:center;gap:9px;min-height:44px;padding:11px 18px;background:var(--bg-card);border:1px solid var(--border);border-radius:999px;font-size:.92rem;font-weight:500;transition:background .2s ease,border-color .2s ease,transform .2s ease,box-shadow .2s ease}
+.stack-pill .ic{width:16px;height:16px;color:var(--accent-1)}
+.stack-pill:nth-child(3n) .ic{color:var(--accent-2)}
+.stack-pill:nth-child(6) .ic{color:var(--accent-3)}
+.stack-pill:hover{background:var(--bg-card-2);border-color:rgba(94,234,212,.45);transform:translateY(-2px);box-shadow:0 0 18px rgba(94,234,212,.15)}
+
+/* ═══ [F] Процесс ═══ */
+.steps{display:grid;grid-template-columns:1fr;gap:16px}
+.step-card{position:relative;overflow:hidden;background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:22px 20px}
+.step-card::before{content:"";position:absolute;top:0;left:0;width:46px;height:3px;background:var(--grad)}
+.step-num{display:grid;place-items:center;width:40px;height:40px;border-radius:10px;font-family:var(--font-mono);font-size:.85rem;font-weight:600;color:var(--accent-1);background:rgba(94,234,212,.08);border:1px solid rgba(94,234,212,.3);margin-bottom:14px}
+.step-card h3{font-size:1.05rem;margin-bottom:6px}
+.step-card p{color:var(--text-dim);font-size:.92rem;line-height:1.55}
+@media (min-width:560px){.steps{grid-template-columns:repeat(2,1fr)}}
+@media (min-width:1024px){.steps{grid-template-columns:repeat(4,1fr)}}
+
+/* ═══ [G] Услуги ═══ */
+.svc-grid{display:grid;grid-template-columns:1fr;gap:16px}
+.svc-card{display:flex;flex-direction:column;height:100%;background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:22px 20px;transition:background .2s ease,transform .2s ease,border-color .2s ease,box-shadow .2s ease}
+.svc-card:hover{background:var(--bg-card-2);transform:translateY(-4px);border-color:#2c3654;box-shadow:var(--shadow)}
+.svc-ic{display:grid;place-items:center;width:46px;height:46px;border-radius:12px;border:1px solid;margin-bottom:14px}
+.svc-ic .ic{width:22px;height:22px}
+.svc-card h3{font-size:1.08rem;line-height:1.3;margin-bottom:8px}
+.svc-card p{flex:1;color:var(--text-dim);font-size:.93rem;margin-bottom:18px}
+.svc-card .btn{width:100%}
+@media (min-width:720px){.svc-grid{grid-template-columns:repeat(2,1fr)}}
+@media (min-width:1240px){.svc-grid{grid-template-columns:repeat(4,1fr)}}
+
+/* ═══ [H] Почему я ═══ */
+.why-grid{display:grid;grid-template-columns:1fr;gap:14px}
+.why-item{display:flex;gap:14px;align-items:flex-start;background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:18px}
+.why-ic{display:grid;place-items:center;width:40px;height:40px;border-radius:10px;border:1px solid;flex:none}
+.why-ic .ic{width:19px;height:19px}
+.why-item p{font-size:.94rem;line-height:1.55}
+@media (min-width:720px){.why-grid{grid-template-columns:repeat(2,1fr)}}
+@media (min-width:1240px){.why-grid{grid-template-columns:repeat(4,1fr)}}
+
+/* ═══ [I] Контакты ═══ */
+.contact-card{position:relative;overflow:hidden;text-align:center;background:var(--bg-card);border:1px solid var(--border);border-radius:24px;padding:clamp(36px,6vw,64px) clamp(20px,5vw,56px)}
+.contact-card::before{content:"";position:absolute;top:-40%;left:50%;transform:translateX(-50%);width:70%;height:80%;background:radial-gradient(closest-side,rgba(94,234,212,.16),transparent);pointer-events:none}
+.contact-card>*{position:relative}
+.contact-card h2{margin-bottom:12px}
+.contact-card .lead{color:var(--text-dim);max-width:520px;margin:0 auto 28px}
+.contact-links{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 24px;margin-top:26px}
+.contact-links a{display:inline-flex;align-items:center;gap:8px;min-height:44px;color:var(--text-dim);font-size:.92rem;transition:color .2s ease}
+.contact-links a:hover{color:var(--text)}
+.contact-links .ic{width:16px;height:16px;color:var(--accent-2)}
+.contact-note{margin-top:18px;font-size:.85rem;color:var(--text-dim)}
+
+/* ═══ [J] Подвал ═══ */
+.site-footer{border-top:1px solid var(--border);padding:26px 0 34px}
+.footer-inner{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
+.footer-copy{color:var(--text-dim);font-size:.85rem}
+.footer-links{display:flex;gap:18px}
+.footer-links a{display:inline-flex;align-items:center;gap:7px;min-height:44px;padding:6px 4px;color:var(--text-dim);font-size:.9rem;transition:color .2s ease}
+.footer-links a:hover{color:var(--text)}
+.footer-links .ic{width:16px;height:16px}
+.to-top{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:10px 16px;border:1px solid var(--border);border-radius:12px;background:var(--bg-card);font-size:.88rem;font-weight:500;transition:background .2s ease,border-color .2s ease,transform .2s ease}
+.to-top:hover{background:var(--bg-card-2);border-color:#2c3654;transform:translateY(-2px)}
+.to-top .ic{width:16px;height:16px}
+@media (min-width:720px){
+  .footer-inner{flex-direction:row;justify-content:space-between;text-align:left}
+}
+
+/* ═══ Появление при скролле (только при активном JS) ═══ */
+.js .reveal{opacity:0;transform:translateY(16px);transition:opacity .55s ease var(--rd,0s),transform .55s ease var(--rd,0s)}
+.js .reveal.visible{opacity:1;transform:translateY(0)}
+.stagger>.reveal:nth-child(2){transition-delay:.08s}
+.stagger>.reveal:nth-child(3){transition-delay:.16s}
+.stagger>.reveal:nth-child(4){transition-delay:.24s}
+
+/* 4K: чуть крупнее базовый кегль */
+@media (min-width:2200px){html{font-size:18px}}
+
+/* Уважение к prefers-reduced-motion */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;transition-delay:0s!important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<!-- SVG-спрайт иконок (stroke-стиль, currentColor) -->
+<svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+  <symbol id="i-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
+  <symbol id="i-arrow-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></symbol>
+  <symbol id="i-arrow-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></symbol>
+  <symbol id="i-github" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><polyline points="22,6 12,13 2,6"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></symbol>
+  <symbol id="i-db" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></symbol>
+  <symbol id="i-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></symbol>
+  <symbol id="i-cloud" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></symbol>
+  <symbol id="i-cube" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></symbol>
+  <symbol id="i-branch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></symbol>
+  <symbol id="i-terminal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></symbol>
+  <symbol id="i-repeat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4z"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+  <symbol id="i-zap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></symbol>
+  <symbol id="i-clipboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></symbol>
+</svg>
+
+<a class="skip-link" href="#projects">К содержанию</a>
+
+<!-- ═══ [A] STICKY HEADER ═══ -->
+<header class="site-header" id="top">
+  <div class="wrap header-inner">
+    <a class="logo" href="#top" aria-label="dev.bots — наверх">
+      <span class="logo-mark" aria-hidden="true"><svg class="ic"><use href="#i-send"/></svg></span>
+      <span class="logo-text">
+        <span class="logo-name">dev<span class="accent">.bots</span><span class="caret" aria-hidden="true"></span></span>
+        <span class="logo-sub">Telegram-боты под ключ</span>
+      </span>
+    </a>
+    <nav class="site-nav" id="site-nav" aria-label="Основная навигация">
+      <a href="#projects">Проекты</a>
+      <a href="#stack">Стек</a>
+      <a href="#services">Услуги</a>
+      <a href="#contacts">Контакты</a>
+      <a class="btn btn-primary nav-cta" href="https://t.me/Daardosovig" target="_blank" rel="noopener">Обсудить проект</a>
+    </nav>
+    <div class="header-actions">
+      <a class="btn btn-primary header-cta" href="https://t.me/Daardosovig" target="_blank" rel="noopener">Обсудить проект</a>
+      <button class="burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="site-nav">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ═══ [B] HERO ═══ -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="kicker reveal">python-разработчик · telegram bot api</p>
+        <h1 class="reveal" style="--rd:.05s">Telegram-боты, которые <span class="hl">работают на ваш бизнес</span></h1>
+        <p class="hero-sub reveal" style="--rd:.1s">ИИ-консультанты, приём заявок, платные каналы, генерация 3D. 4 живых demo-проекта ниже.</p>
+        <div class="hero-actions reveal" style="--rd:.15s">
+          <a class="btn btn-secondary btn-lg" href="#projects">Смотреть проекты <svg class="ic" aria-hidden="true"><use href="#i-arrow-down"/></svg></a>
+          <a class="btn btn-primary btn-lg glow" href="https://t.me/Daardosovig" target="_blank" rel="noopener">Обсудить проект <svg class="ic" aria-hidden="true"><use href="#i-send"/></svg></a>
+        </div>
+        <ul class="hero-badges reveal" style="--rd:.2s">
+          <li><svg class="ic" aria-hidden="true"><use href="#i-code"/></svg>aiogram 3</li>
+          <li><svg class="ic" aria-hidden="true"><use href="#i-db"/></svg>Google Sheets / SQLite</li>
+          <li><svg class="ic" aria-hidden="true"><use href="#i-star"/></svg>Telegram Stars</li>
+        </ul>
+      </div>
+      <div class="hero-art reveal" style="--rd:.25s" aria-hidden="true">
+        <!-- Декоративная композиция: чат-пузыри + бумажный самолётик -->
+        <svg viewBox="0 0 520 440" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="hg-grad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#5eead4"/><stop offset="1" stop-color="#818cf8"/>
+            </linearGradient>
+            <pattern id="hg-dots" width="24" height="24" patternUnits="userSpaceOnUse">
+              <circle cx="2" cy="2" r="1.5" fill="#232c4a"/>
+            </pattern>
+          </defs>
+          <rect x="8" y="8" width="504" height="424" rx="24" fill="url(#hg-dots)"/>
+          <rect x="8" y="8" width="504" height="424" rx="24" fill="none" stroke="#1f2740"/>
+          <path class="hg-dash" d="M120 384 C 240 424, 424 330, 442 148" fill="none" stroke="url(#hg-grad)" stroke-width="2" stroke-dasharray="3 9" opacity=".5"/>
+          <g transform="translate(36,64)"><g class="hg-float-a">
+            <rect width="240" height="104" rx="16" fill="#121829" stroke="#1f2740"/>
+            <path d="M28 104 L20 122 L46 104 Z" fill="#121829"/>
+            <circle cx="30" cy="30" r="13" fill="url(#hg-grad)" opacity=".9"/>
+            <rect x="54" y="22" width="118" height="9" rx="4.5" fill="#2a3352"/>
+            <rect x="54" y="38" width="82" height="9" rx="4.5" fill="#222b47"/>
+            <rect x="20" y="64" width="182" height="9" rx="4.5" fill="#222b47"/>
+            <rect x="20" y="80" width="128" height="9" rx="4.5" fill="#222b47"/>
+          </g></g>
+          <g transform="translate(300,152)"><g class="hg-float-b">
+            <rect width="180" height="56" rx="16" fill="#1a2035" stroke="#2a3352"/>
+            <path d="M150 56 L168 72 L172 56 Z" fill="#1a2035"/>
+            <text x="20" y="35" class="hg-mono" fill="#5eead4" font-size="14">/start</text>
+            <text x="132" y="35" class="hg-mono" fill="#818cf8" font-size="12">✓✓</text>
+          </g></g>
+          <g transform="translate(70,252)"><g class="hg-float-c">
+            <rect width="280" height="120" rx="16" fill="#121829" stroke="#1f2740"/>
+            <circle cx="34" cy="36" r="16" fill="rgba(244,114,182,.12)" stroke="#f472b6" stroke-width="1.5"/>
+            <path transform="translate(24,26) scale(.84)" d="M12 2l2.9 6.2 6.6.8-4.9 4.5 1.3 6.5-5.9-3.3-5.9 3.3 1.3-6.5L2.5 9l6.6-.8z" fill="#f472b6"/>
+            <text x="62" y="33" class="hg-mono" fill="#e6ecff" font-size="13">Оплата · 250 Stars</text>
+            <rect x="62" y="44" width="140" height="8" rx="4" fill="#222b47"/>
+            <rect x="20" y="76" width="152" height="30" rx="10" fill="url(#hg-grad)"/>
+            <text x="34" y="96" class="hg-mono" fill="#0a0e1a" font-size="13" font-weight="700">Доступ открыт</text>
+            <circle cx="234" cy="91" r="13" fill="none" stroke="#5eead4" stroke-width="2"/>
+            <path d="M228 91l4 4 8-8" fill="none" stroke="#5eead4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </g></g>
+          <g transform="translate(330,336)">
+            <rect width="152" height="36" rx="18" fill="#121829" stroke="#1f2740"/>
+            <circle class="hg-pulse" cx="22" cy="18" r="5" fill="#5eead4"/>
+            <text x="36" y="23" class="hg-mono" fill="#8a95b3" font-size="12">bot · online</text>
+          </g>
+          <g transform="translate(396,58) rotate(10)"><g class="hg-plane">
+            <path d="M0 26 L64 0 L40 56 L28 36 Z" fill="url(#hg-grad)"/>
+            <path d="M64 0 L28 36 L28 52 L35 42 Z" fill="#6672e8"/>
+          </g></g>
+          <g transform="translate(252,38)"><path class="hg-spark" d="M0 -7 V7 M-7 0 H7" stroke="#f472b6" stroke-width="2" stroke-linecap="round"/></g>
+          <g transform="translate(484,238)"><path class="hg-spark hg-spark-2" d="M0 -6 V6 M-6 0 H6" stroke="#818cf8" stroke-width="2" stroke-linecap="round"/></g>
+          <g transform="translate(52,212)"><path class="hg-spark hg-spark-3" d="M0 -5 V5 M-5 0 H5" stroke="#5eead4" stroke-width="2" stroke-linecap="round"/></g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ [C] ПРОЕКТЫ ═══ -->
+  <section class="section" id="projects">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <p class="sec-kicker">// портфолио</p>
+        <h2>Портфолио</h2>
+        <p class="sec-sub">4 demo-бота. Каждый — рабочая архитектура, готовая к запуску под клиента.</p>
+      </div>
+      <div class="cards-grid stagger">
+
+        <article class="card reveal">
+          <div class="card-top">
+            <span class="card-emoji tone-mint" aria-hidden="true">🚗</span>
+            <span class="badge tone-mint">AI + Leads</span>
+          </div>
+          <h3 class="card-title">AutoPro — детейлинг-студия</h3>
+          <p class="card-desc">Telegram-бот с ИИ-консультантом и приёмом заявок для автосервиса.</p>
+          <ul class="card-features">
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><span>ИИ-консультант по базе знаний компании (без галлюцинаций)</span></li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><span>Пошаговая анкета заявки за 4 шага</span></li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><span>Сохранение в Google Таблицу + резервный CSV</span></li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><span>Карточка заявки админу с кнопками «в работу / отклонить»</span></li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><span>Уведомление клиента о смене статуса</span></li>
+          </ul>
+          <div class="chips card-stack">
+            <span class="chip">aiogram 3</span><span class="chip">aiohttp</span><span class="chip">OpenAI API</span><span class="chip">Google Apps Script</span><span class="chip">CSV</span>
+          </div>
+          <div class="card-actions">
+            <button class="btn btn-secondary btn-sm" type="button" data-project="autopro" aria-haspopup="dialog" aria-controls="project-modal">Подробнее</button>
+            <a class="btn btn-primary btn-sm" href="https://t.me/Daardosovig" target="_blank" rel="noopener">Хочу так же</a>
+          </div>
+        </article>
+
+        <article class="card reveal">
+          <div class="card-top">
+            <span class="card-emoji tone-indigo" aria-hidden="true">🔐</span>
+            <span class="badge tone-indigo">Payments</span>
+          </div>
+          <h3 class="card-title">Paywall Club — платные каналы</h3>
+          <p class="card-desc">Telegram-бот для монетизации закрытых каналов и курсов через Stars.</p>
+          <ul class="card-features">
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><span>Оплата в Telegram Stars (нативный invoice-flow)</span></li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><span>Авто-выдача одноразовой ссылки в приватный канал</span></li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><span>Авто-удаление пользователей по окончании подписки</span></li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><span>Учёт подписок и платежей в SQLite</span></li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><span>Админ-панель: статистика + рассылка по базе</span></li>
+          </ul>
+          <div class="chips card-stack">
+            <span class="chip">aiogram 3</span><span class="chip">SQLite</span><span class="chip">Telegram Stars</span><span class="chip">asyncio</span>
+          </div>
+          <div class="card-actions">
+            <button class="btn btn-secondary btn-sm" type="button" data-project="paywall" aria-haspopup="dialog" aria-controls="project-modal">Подробнее</button>
+            <a class="btn btn-primary btn-sm" href="https://t.me/Daardosovig" target="_blank" rel="noopener">Хочу так же</a>
+          </div>
+        </article>
+
+        <article class="card reveal">
+          <div class="card-top">
+            <span class="card-emoji tone-pink" aria-hidden="true">📋</span>
+            <span class="badge tone-pink">Leads</span>
+          </div>
+          <h3 class="card-title">Bot Order Funnel — воронка заявок</h3>
+          <p class="card-desc">Бот-воронка для фрилансера/студии: собирает заявки на разработку ботов за 3 шага.</p>
+          <ul class="card-features">
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><span>Анкета из 3 шагов с валидацией</span></li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><span>Промокод со скидкой (STARS15 → −15%)</span></li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><span>Карточка заявки админу со всеми контактами</span></li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><span>Кнопка «Написать напрямую»</span></li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><span>Отмена в любой момент (/cancel + inline)</span></li>
+          </ul>
+          <div class="chips card-stack">
+            <span class="chip">aiogram 3</span><span class="chip">FSM</span><span class="chip">MemoryStorage</span>
+          </div>
+          <div class="card-actions">
+            <button class="btn btn-secondary btn-sm" type="button" data-project="funnel" aria-haspopup="dialog" aria-controls="project-modal">Подробнее</button>
+            <a class="btn btn-primary btn-sm" href="https://t.me/Daardosovig" target="_blank" rel="noopener">Хочу так же</a>
+          </div>
+        </article>
+
+        <article class="card reveal">
+          <div class="card-top">
+            <span class="card-emoji tone-indigo" aria-hidden="true">🧊</span>
+            <span class="badge tone-indigo">3D + Payments</span>
+          </div>
+          <h3 class="card-title">3D Print Studio — генерация 3D по фото</h3>
+          <p class="card-desc">Бот генерирует 3D-модель по фотографии и отдаёт файлы для 3D-печати за Stars.</p>
+          <ul class="card-features">
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><span>Генерация 3D по фото через AI (Hunyuan / Meshy)</span></li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><span>Авто-конвертация в STL/OBJ через trimesh (repair + scaling)</span></li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><span>Оплата в Telegram Stars с валидацией на pre_checkout</span></li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><span>Полноценная система возвратов с retry и backoff</span></li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><span>Очередь генераций + антифрод + идемпотентность</span></li>
+          </ul>
+          <div class="chips card-stack">
+            <span class="chip">aiogram 3</span><span class="chip">aiohttp</span><span class="chip">trimesh</span><span class="chip">matplotlib</span><span class="chip">SQLite</span><span class="chip">Telegram Stars</span>
+          </div>
+          <div class="card-actions">
+            <button class="btn btn-secondary btn-sm" type="button" data-project="print3d" aria-haspopup="dialog" aria-controls="project-modal">Подробнее</button>
+            <a class="btn btn-primary btn-sm" href="https://t.me/Daardosovig" target="_blank" rel="noopener">Хочу так же</a>
+          </div>
+        </article>
+
+      </div>
+      <div class="demo-note reveal">
+        <svg class="ic" aria-hidden="true"><use href="#i-info"/></svg>
+        <p>Все проекты — <strong>demo-версии</strong> моих личных работ. Код и логика адаптируются под задачу клиента.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ [D] МОДАЛКА ПРОЕКТА (контент подставляется из JS) ═══ -->
+  <div class="modal" id="project-modal" hidden>
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <button class="modal-close" type="button" data-close-modal aria-label="Закрыть окно проекта">
+        <svg class="ic" aria-hidden="true"><use href="#i-x"/></svg>
+      </button>
+      <div class="modal-scroll" id="modal-content"></div>
+      <div class="modal-foot">
+        <a class="btn btn-primary" href="https://t.me/Daardosovig" target="_blank" rel="noopener">
+          <svg class="ic" aria-hidden="true"><use href="#i-send"/></svg> Обсудить похожего бота
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ [E] СТЕК ═══ -->
+  <section class="section" id="stack">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <p class="sec-kicker">// стек</p>
+        <h2>Стек технологий</h2>
+        <p class="sec-sub">Инструменты, с которыми работаю каждый день. Без зоопарка зависимостей — только то, что нужно задаче.</p>
+      </div>
+      <ul class="stack-cloud reveal">
+        <li class="stack-pill"><svg class="ic" aria-hidden="true"><use href="#i-terminal"/></svg>Python</li>
+        <li class="stack-pill"><svg class="ic" aria-hidden="true"><use href="#i-send"/></svg>aiogram 3</li>
+        <li class="stack-pill"><svg class="ic" aria-hidden="true"><use href="#i-globe"/></svg>aiohttp</li>
+        <li class="stack-pill"><svg class="ic" aria-hidden="true"><use href="#i-db"/></svg>SQLite</li>
+        <li class="stack-pill"><svg class="ic" aria-hidden="true"><use href="#i-cloud"/></svg>Google Apps Script</li>
+        <li class="stack-pill"><svg class="ic" aria-hidden="true"><use href="#i-star"/></svg>Telegram Stars</li>
+        <li class="stack-pill"><svg class="ic" aria-hidden="true"><use href="#i-spark"/></svg>OpenAI API</li>
+        <li class="stack-pill"><svg class="ic" aria-hidden="true"><use href="#i-cube"/></svg>trimesh</li>
+        <li class="stack-pill"><svg class="ic" aria-hidden="true"><use href="#i-chart"/></svg>matplotlib</li>
+        <li class="stack-pill"><svg class="ic" aria-hidden="true"><use href="#i-repeat"/></svg>FSM</li>
+        <li class="stack-pill"><svg class="ic" aria-hidden="true"><use href="#i-layers"/></svg>Docker (базово)</li>
+        <li class="stack-pill"><svg class="ic" aria-hidden="true"><use href="#i-branch"/></svg>Git</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══ [F] КАК Я РАБОТАЮ ═══ -->
+  <section class="section" id="process">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <p class="sec-kicker">// процесс</p>
+        <h2>Как я работаю</h2>
+        <p class="sec-sub">От первого сообщения до работающего бота — четыре понятных шага.</p>
+      </div>
+      <ol class="steps stagger">
+        <li class="step-card reveal">
+          <span class="step-num" aria-hidden="true">01</span>
+          <h3>Бриф</h3>
+          <p>Обсуждаем задачу, сценарии и интеграции — бесплатно.</p>
+        </li>
+        <li class="step-card reveal">
+          <span class="step-num" aria-hidden="true">02</span>
+          <h3>Прототип</h3>
+          <p>Показываю кликабельный сценарий бота до основной разработки.</p>
+        </li>
+        <li class="step-card reveal">
+          <span class="step-num" aria-hidden="true">03</span>
+          <h3>Разработка</h3>
+          <p>Пишу код на aiogram 3, тестирую сценарии и платежи.</p>
+        </li>
+        <li class="step-card reveal">
+          <span class="step-num" aria-hidden="true">04</span>
+          <h3>Запуск и поддержка</h3>
+          <p>Деплой, инструкция по запуску, правки после старта.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ═══ [G] УСЛУГИ ═══ -->
+  <section class="section" id="services">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <p class="sec-kicker">// услуги</p>
+        <h2>Услуги</h2>
+        <p class="sec-sub">Что можно заказать — от типовых сценариев до нестандартных интеграций.</p>
+      </div>
+      <div class="svc-grid stagger">
+        <article class="svc-card reveal">
+          <span class="svc-ic tone-mint" aria-hidden="true"><svg class="ic"><use href="#i-clipboard"/></svg></span>
+          <h3>Бот приёма заявок</h3>
+          <p>Анкеты и формы с валидацией, выгрузка в Google Sheets или CRM, мгновенные уведомления админу о каждой заявке.</p>
+          <a class="btn btn-secondary" href="https://t.me/Daardosovig" target="_blank" rel="noopener">Обсудить</a>
+        </article>
+        <article class="svc-card reveal">
+          <span class="svc-ic tone-indigo" aria-hidden="true"><svg class="ic"><use href="#i-spark"/></svg></span>
+          <h3>ИИ-консультант</h3>
+          <p>Отвечает клиентам по базе знаний компании и помнит контекст диалога. Anti-hallucination: без выдуманных цен и услуг.</p>
+          <a class="btn btn-secondary" href="https://t.me/Daardosovig" target="_blank" rel="noopener">Обсудить</a>
+        </article>
+        <article class="svc-card reveal">
+          <span class="svc-ic tone-indigo" aria-hidden="true"><svg class="ic"><use href="#i-lock"/></svg></span>
+          <h3>Платный доступ / закрытые каналы</h3>
+          <p>Оплата в Telegram Stars, авто-выдача invite-ссылок, авто-кик по окончании подписки и продление в один клик.</p>
+          <a class="btn btn-secondary" href="https://t.me/Daardosovig" target="_blank" rel="noopener">Обсудить</a>
+        </article>
+        <article class="svc-card reveal">
+          <span class="svc-ic tone-pink" aria-hidden="true"><svg class="ic"><use href="#i-zap"/></svg></span>
+          <h3>Нестандартные задачи</h3>
+          <p>Генерация контента, 3D-модели, интеграции с внешними API. Если это можно автоматизировать — это можно завернуть в бота.</p>
+          <a class="btn btn-secondary" href="https://t.me/Daardosovig" target="_blank" rel="noopener">Обсудить</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ [H] ПОЧЕМУ Я ═══ -->
+  <section class="section" id="why">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <p class="sec-kicker">// почему я</p>
+        <h2>Почему я</h2>
+        <p class="sec-sub">Подход, который экономит вам нервы и деньги.</p>
+      </div>
+      <div class="why-grid stagger">
+        <div class="why-item reveal">
+          <span class="why-ic tone-mint" aria-hidden="true"><svg class="ic"><use href="#i-code"/></svg></span>
+          <p>Пишу на чистом aiogram 3 без левых библиотек.</p>
+        </div>
+        <div class="why-item reveal">
+          <span class="why-ic tone-indigo" aria-hidden="true"><svg class="ic"><use href="#i-shield"/></svg></span>
+          <p>Закладываю устойчивость к падениям: retry, refunds, fallback-каналы.</p>
+        </div>
+        <div class="why-item reveal">
+          <span class="why-ic tone-pink" aria-hidden="true"><svg class="ic"><use href="#i-lock"/></svg></span>
+          <p>Работаю с деньгами аккуратно: идемпотентность, аудит платежей.</p>
+        </div>
+        <div class="why-item reveal">
+          <span class="why-ic tone-mint" aria-hidden="true"><svg class="ic"><use href="#i-download"/></svg></span>
+          <p>Отдаю рабочий код + инструкцию по запуску.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ [I] КОНТАКТЫ ═══ -->
+  <section class="section" id="contacts">
+    <div class="wrap">
+      <div class="contact-card reveal">
+        <p class="sec-kicker">// контакты</p>
+        <h2>Готовы обсудить вашего бота?</h2>
+        <p class="lead">Опишите задачу в двух предложениях — вернусь с планом, сроками и оценкой.</p>
+        <a class="btn btn-primary btn-lg glow" href="https://t.me/Daardosovig" target="_blank" rel="noopener">
+          <svg class="ic" aria-hidden="true"><use href="#i-send"/></svg> Написать в Telegram
+        </a>
+        <div class="contact-links">
+          <a href="https://t.me/Daardosovig" target="_blank" rel="noopener"><svg class="ic" aria-hidden="true"><use href="#i-send"/></svg><span>@Daardosovig</span></a>
+          <a href="https://github.com/daardos" target="_blank" rel="noopener" aria-label="GitHub (откроется в новой вкладке)"><svg class="ic" aria-hidden="true"><use href="#i-github"/></svg><span>github.com/daardos</span></a>
+        </div>
+        <p class="contact-note">Отвечаю в течение рабочего дня. Консультация — бесплатно.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══ [J] FOOTER ═══ -->
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <p class="footer-copy">© 2026 dev.bots · Сделано на Python + aiogram 3</p>
+    <nav class="footer-links" aria-label="Ссылки в подвале">
+      <a href="https://t.me/Daardosovig" target="_blank" rel="noopener"><svg class="ic" aria-hidden="true"><use href="#i-send"/></svg>Telegram</a>
+      <a href="https://github.com/daardos" target="_blank" rel="noopener"><svg class="ic" aria-hidden="true"><use href="#i-github"/></svg>GitHub</a>
+    </nav>
+    <a class="to-top" href="#top">Наверх <svg class="ic" aria-hidden="true"><use href="#i-arrow-up"/></svg></a>
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+  /* Класс js: reveal-анимации включаются только при рабочем JS */
+  document.documentElement.classList.add("js");
+
+  /* ── Мобильное меню ── */
+  const header = document.querySelector(".site-header");
+  const burger = document.querySelector(".burger");
+  const nav = document.getElementById("site-nav");
+
+  function setMenu(open) {
+    nav.classList.toggle("open", open);
+    burger.classList.toggle("open", open);
+    burger.setAttribute("aria-expanded", String(open));
+    burger.setAttribute("aria-label", open ? "Закрыть меню" : "Открыть меню");
+  }
+  burger.addEventListener("click", () => setMenu(!nav.classList.contains("open")));
+  nav.querySelectorAll("a").forEach(a => a.addEventListener("click", () => setMenu(false)));
+  document.addEventListener("click", e => {
+    if (nav.classList.contains("open") && !header.contains(e.target)) setMenu(false);
+  });
+  const mq = window.matchMedia("(min-width: 900px)");
+  const onMq = e => { if (e.matches) setMenu(false); };
+  if (mq.addEventListener) mq.addEventListener("change", onMq); else mq.addListener(onMq);
+
+  /* ── Тень шапки при скролле ── */
+  const onScroll = () => header.classList.toggle("scrolled", window.scrollY > 10);
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  /* ── Данные проектов для модалки ── */
+  const PROJECTS = {
+    autopro: {
+      emoji: "🚗", cat: "AI + Leads", tone: "tone-mint",
+      title: "AutoPro — детейлинг-студия",
+      lead: "Демо-бот для детейлинг-студии: консультирует клиентов по услугам и ценам с помощью ИИ и доводит их до заявки. Связка «ИИ + анкета + таблица» закрывает весь путь клиента — от первого вопроса до статуса заявки.",
+      features: [
+        "ИИ-консультант отвечает на вопросы об услугах, ценах и гарантии, опираясь строго на базу знаний: anti-hallucination + защита от prompt-injection.",
+        "Память диалога — 3 пары «вопрос-ответ» на пользователя.",
+        "Анкета из 4 шагов через FSM: услуга → имя → телефон → подтверждение.",
+        "Заявки уходят в Google Таблицу через Apps Script webhook; если вебхук недоступен — авто-фолбэк в локальный CSV (utf-8-sig, «;», защита от формул-инъекций).",
+        "Админ получает карточку заявки с кнопками «взять в работу / отклонить», клиент — уведомление о смене статуса.",
+        "Прайс-лист, справка, команды /cancel и /id."
+      ],
+      stack: ["aiogram 3", "aiohttp", "OpenAI API", "Google Apps Script", "CSV"],
+      hood: [
+        "Одна общая aiohttp-сессия на ИИ и вебхук — меньше накладных расходов на соединения и предсказуемое поведение под нагрузкой.",
+        "Файловый I/O вынесен в asyncio.to_thread и защищён asyncio.Lock — event loop не блокируется даже при записи резервного CSV.",
+        "Глобальный @router.errors ловит любые необработанные ошибки, чтобы бот не падал. Все клавиатуры (Reply/Inline) управляются lifecycle-хелперами — не «висят» после завершения сценария."
+      ]
+    },
+    paywall: {
+      emoji: "🔐", cat: "Payments", tone: "tone-indigo",
+      title: "Paywall Club — платные каналы",
+      lead: "Демо-бот для авторов закрытых каналов и курсов: продаёт доступ за Telegram Stars и сам управляет подписчиками. Никаких внешних платёжных систем и ручных добавлений — оплата, вход и продление полностью автоматизированы.",
+      features: [
+        "Оплата подписки в Telegram Stars без внешних платёжных систем.",
+        "После оплаты бот сам создаёт одноразовую invite-ссылку в закрытый канал (member_limit=1).",
+        "Фоновая проверка подписок раз в 30 сек: истёкших «мягко» удаляет из канала (ban + unban) и уведомляет с кнопкой «продлить».",
+        "Продление подписки атомарно складывается к текущей дате.",
+        "FREE_MODE для демонстрации без оплаты.",
+        "Админка: статистика (юзеры, активные подписки, оплаты, звёзды), выдача бесплатного доступа по ID.",
+        "Массовая рассылка: текст/фото, предпросмотр, отчёт «отправлено/ошибок», антифлуд."
+      ],
+      stack: ["aiogram 3", "SQLite", "Telegram Stars", "asyncio"],
+      hood: [
+        "Background-task watcher крутится в одном event loop с polling — отдельный планировщик и лишние процессы не нужны.",
+        "SQLite + разделение handlers_user/handlers_admin. Админский роутер регистрируется первым — так глобальная кнопка «Отмена» работает в любом состоянии FSM.",
+        "Поддерживается кастомный Telegram Bot API base — можно работать через прокси или локальный сервер Bot API."
+      ]
+    },
+    funnel: {
+      emoji: "📋", cat: "Leads", tone: "tone-pink",
+      title: "Bot Order Funnel — воронка заявок",
+      lead: "Демо-воронка для фрилансера или студии разработки: квалифицирует заявку за три шага и передаёт её админу в готовом виде. Лёгкая архитектура без БД — разворачивается за минуты и встраивается в любой канал продаж.",
+      features: [
+        "Анкета из 3 шагов: тип бота (inline-кнопки) → описание задачи (валидация 10–1500 символов) → промокод (можно пропустить).",
+        "Регистронезависимая проверка промокода и учёт скидки в карточке админа и в ответе клиенту.",
+        "Карточка заявки админу с кликабельной ссылкой tg://user, HTML-экранированием и временем сервера.",
+        "Кнопка «Написать напрямую» — обход анкеты.",
+        "Отмена анкеты в любой момент через /cancel и inline-кнопку (StateFilter(\"*\")).",
+        "Если карточка не доставилась админу — клиент получает сообщение «напиши напрямую», а не тишину."
+      ],
+      stack: ["aiogram 3", "FSM", "MemoryStorage"],
+      hood: [
+        "_show_step редактирует сообщение с кнопками вместо отправки нового — чат не засоряется. Callback-константы и BOT_TYPES вынесены в keyboards.py.",
+        "Graceful degradation на каждом шаге: при любом сбое клиент получает понятный следующий шаг, а не зависший диалог."
+      ]
+    },
+    print3d: {
+      emoji: "🧊", cat: "3D + Payments", tone: "tone-indigo",
+      title: "3D Print Studio — генерация 3D по фото",
+      lead: "Демо-бот для студии 3D-печати: превращает фотографии объекта в готовую к печати 3D-модель и продаёт результат за Telegram Stars. Самый технически сложный проект портфолио: AI-генерация, постобработка mesh и полноценная работа с платежами и возвратами.",
+      features: [
+        "Принимает до 3 фото объекта (photo/document), опционально «мультивью» по 2–3 фото под разными углами.",
+        "Генерирует 3D-модель через AI-сервис (белая / PRO / мультивью).",
+        "Автоматически ремонтирует mesh (fill_holes, fix_normals), масштабирует под выбранный размер 50–200 мм и экспортирует в STL (и OBJ по запросу).",
+        "Локальный рендер превью через matplotlib, если AI не вернул картинку.",
+        "Оплата в Stars через полный invoice-flow с валидацией суммы, валюты, TTL заказа и статуса на pre_checkout_query.",
+        "Система возвратов: refund_pending / refund_failed / refunded, retry с экспоненциальным backoff, фоновый воркер, авто-восстановление «зависших» платежей старше 45 минут.",
+        "Очередь генерации (одна за раз) с показом позиции в очереди.",
+        "Антиспам-кулдаун 60 сек, полный cleanup temp-файлов и состояния."
+      ],
+      stack: ["aiogram 3", "aiohttp", "trimesh", "matplotlib", "SQLite", "Telegram Stars"],
+      hood: [
+        "SQLite (WAL + threading.Lock + asyncio.to_thread) для безопасной работы с деньгами: charge_id UNIQUE, order_lock/user_lock/refund_lock — никаких гонок.",
+        "Authorization-токен API уходит только на доверенный домен (presigned S3/CDN — без токена). Whitelist домена Telegram-прокси защищает от подмены .env.",
+        "Retry-хелперы и graceful degradation: при провале постобработки отдаём хотя бы исходный GLB — клиент не остаётся без результата."
+      ]
+    }
+  };
+
+  /* ── Модалка: одна на все проекты ── */
+  const modal = document.getElementById("project-modal");
+  const panel = modal.querySelector(".modal-panel");
+  const modalContent = document.getElementById("modal-content");
+  const modalClose = modal.querySelector(".modal-close");
+  let lastFocus = null;
+  let hideTimer = null;
+
+  function buildModal(p) {
+    const feats = p.features.map(f =>
+      '<li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><span>' + f + "</span></li>"
+    ).join("");
+    const chips = p.stack.map(s => '<span class="chip">' + s + "</span>").join("");
+    const hood = p.hood.map(t => '<p class="modal-p">' + t + "</p>").join("");
+    return (
+      '<div class="modal-head">' +
+        '<span class="card-emoji ' + p.tone + '" aria-hidden="true">' + p.emoji + "</span>" +
+        '<div><span class="badge ' + p.tone + '">' + p.cat + "</span>" +
+        '<h3 id="modal-title">' + p.title + "</h3></div>" +
+      "</div>" +
+      '<p class="modal-lead">' + p.lead + "</p>" +
+      '<h4 class="modal-h">Что умеет</h4>' +
+      '<ul class="modal-features">' + feats + "</ul>" +
+      '<h4 class="modal-h">Технологии</h4>' +
+      '<div class="chips">' + chips + "</div>" +
+      '<h4 class="modal-h">Под капотом</h4>' + hood
+    );
+  }
+
+  function openModal(id) {
+    const p = PROJECTS[id];
+    if (!p) return;
+    clearTimeout(hideTimer);
+    lastFocus = document.activeElement;
+    modalContent.innerHTML = buildModal(p);
+    modalContent.scrollTop = 0;
+    modal.hidden = false;
+    void modal.offsetHeight; /* reflow, чтобы transition сработал */
+    modal.classList.add("open");
+    document.body.classList.add("lock");
+    modalClose.focus();
+  }
+
+  function closeModal() {
+    if (modal.hidden) return;
+    modal.classList.remove("open");
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(() => {
+      modal.hidden = true;
+      document.body.classList.remove("lock");
+      if (lastFocus) lastFocus.focus({ preventScroll: true });
+    }, 260);
+  }
+
+  document.querySelectorAll("[data-project]").forEach(btn =>
+    btn.addEventListener("click", () => openModal(btn.dataset.project))
+  );
+  modal.querySelectorAll("[data-close-modal]").forEach(el =>
+    el.addEventListener("click", closeModal)
+  );
+
+  /* Escape + ловушка фокуса внутри модалки */
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") {
+      if (!modal.hidden) { closeModal(); return; }
+      if (nav.classList.contains("open")) { setMenu(false); burger.focus(); }
+      return;
+    }
+    if (e.key === "Tab" && !modal.hidden) {
+      const f = Array.from(panel.querySelectorAll("button, a[href]"));
+      if (!f.length) return;
+      const first = f[0], last = f[f.length - 1];
+      if (!panel.contains(document.activeElement)) { e.preventDefault(); first.focus(); }
+      else if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+
+  /* ── Появление секций при скролле ── */
+  const revealEls = document.querySelectorAll(".reveal");
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(en => {
+        if (!en.isIntersecting) return;
+        const el = en.target;
+        el.classList.add("visible");
+        io.unobserve(el);
+        /* Снимаем классы после анимации, чтобы hover карточек остался быстрым (0.2s) */
+        setTimeout(() => el.classList.remove("reveal", "visible"), 900);
+      });
+    }, { threshold: 0.12, rootMargin: "0px 0px -30px 0px" });
+    revealEls.forEach(el => io.observe(el));
+  } else {
+    revealEls.forEach(el => el.classList.remove("reveal"));
+  }
+
+  /* Одно приветственное сообщение для тех, кто заглянул в консоль */
+  console.log("%cdev.bots", "font-weight:700;color:#5eead4", "— портфолио разработчика Telegram-ботов. Обсудить проект: https://t.me/Daardosovig");
+})();
+</script>
+</body>
+</html>
